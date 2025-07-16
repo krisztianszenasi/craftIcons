@@ -7,30 +7,34 @@
 
 import UIKit
 
-enum CraftIconSize: CGFloat {
-    case small = 64
-    case medium = 96
-    case large = 128
-    case xlarge = 160
-}
-
-
-
-
 
 class CraftIconView: UIView {
 
-    let titleLabel: CraftTitleLabel!
+    private let titleLabel = CraftTitleLabel(textAlignment: .center, fontSize: 16)
+    private var config: CraftIconViewConfig!
+
     
-    init(text: String, iconSize: CraftIconSize) {
-        titleLabel = CraftTitleLabel(textAlignment: .center, fontSize: iconSize.rawValue / 3)
+    init(config: CraftIconViewConfig) {
         super.init(frame: .zero)
-        configureView(iconSize: iconSize.rawValue)
-        configureTitleLabel(text: text)
+        self.config = config
+        configureView(iconSize: config.iconSize.rawValue)
+        configureTitleLabel(text: config.text)
+        updateStyle(with: config)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func updateStyle(with config: CraftIconViewConfig) {
+        titleLabel.font = UIFont.systemFont(ofSize: config.iconSize.rawValue / 3, weight: .bold)
+        titleLabel.text = StringUtils.getInitials(for: config.text)
+        self.config = config
+    }
+    
+    func getConfig() -> CraftIconViewConfig {
+        return config
     }
     
     private func configureView(iconSize: CGFloat) {
@@ -54,4 +58,6 @@ class CraftIconView: UIView {
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
+    
+    
 }

@@ -10,7 +10,6 @@ import UIKit
 class ViewController: UIViewController {
     
     let titleLabel = CraftTitleLabel(textAlignment: .left, fontSize: 34)
-    let spaceIcon = CraftIconView(text: "TA", iconSize: .small)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,10 +18,18 @@ class ViewController: UIViewController {
         titleLabel.text = "Space Settings"
         
         let stack = UIStackView(arrangedSubviews: [
-            CraftIconView(text: "Talent", iconSize: .small),
-            CraftIconView(text: "Talent Acquisition", iconSize: .medium),
-            CraftIconView(text: "Talent Acquisition Team", iconSize: .large),
-            CraftIconView(text: "Talent Acquisition Team Avatar", iconSize: .xlarge)
+            CraftIconView(config: CraftIconViewConfig(
+                text: "T", iconSize: .small
+            )),
+            CraftIconView(config: CraftIconViewConfig(
+                text: "T A", iconSize: .medium
+            )),
+            CraftIconView(config: CraftIconViewConfig(
+                text: "T A B", iconSize: .large
+            )),
+            CraftIconView(config: CraftIconViewConfig(
+                text: "T A B D", iconSize: .xlarge
+            )),
         ])
         
         stack.axis = .vertical

@@ -10,6 +10,8 @@ import UIKit
 
 struct UIHelpers {
     
+    static let padding: CGFloat = 20
+    
     static func addSeparator(below viewAbove: UIView, in container: UIView, padding: CGFloat = 20) {
         let separator = CraftSeparatorView()
         container.addSubview(separator)

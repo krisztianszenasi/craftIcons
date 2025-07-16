@@ -19,7 +19,7 @@ class CraftIconView: UIView {
         super.init(frame: .zero)
         self.config = config
         
-        configureView(iconSize: config.iconSize.rawValue)
+        configureView()
         configureColoredView()
         configureTitleLabel(text: text)
         
@@ -30,6 +30,9 @@ class CraftIconView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func update(text: String) {
+        titleLabel.text = StringUtils.getInitials(for: text)
+    }
     
     func updateStyle(with config: CraftIconViewConfig) {
         reset()
@@ -50,24 +53,14 @@ class CraftIconView: UIView {
         return config
     }
     
-    private func configureView(iconSize: CGFloat) {
-        translatesAutoresizingMaskIntoConstraints = false
-        layer.cornerRadius = iconSize / 5
-        clipsToBounds = true
-        
-        NSLayoutConstraint.activate([
-            widthAnchor.constraint(equalToConstant: iconSize),
-            heightAnchor.constraint(equalToConstant: iconSize)
-        ])
+    private func reset() {
+        coloredView.isHidden = true
     }
-    
-    private func configureTitleLabel(text: String) {
-        addSubview(titleLabel)
-        titleLabel.text = StringUtils.getInitials(for: text)
-        NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-        ])
+        
+    private func configureView() {
+        translatesAutoresizingMaskIntoConstraints = false
+        layer.cornerRadius = 30
+        clipsToBounds = true
     }
     
     private func configureColoredView() {
@@ -83,7 +76,17 @@ class CraftIconView: UIView {
         ])
     }
     
-    private func reset() {
-        coloredView.isHidden = true
+    
+    private func configureTitleLabel(text: String) {
+        addSubview(titleLabel)
+        titleLabel.text = StringUtils.getInitials(for: text)
+        titleLabel.textAlignment = .center
+        
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            titleLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.8),
+            titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8)
+        ])
     }
 }

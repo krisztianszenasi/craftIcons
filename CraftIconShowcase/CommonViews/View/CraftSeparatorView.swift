@@ -18,7 +18,7 @@ class CraftSeparatorView: UIView {
     }
     
     func setup() {
-        backgroundColor = .lightGray
+        backgroundColor = .systemGray
         translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([

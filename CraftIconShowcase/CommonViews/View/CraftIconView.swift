@@ -10,15 +10,19 @@ import UIKit
 
 class CraftIconView: UIView {
 
-    private let titleLabel = CraftDynamicFontLabel()
     private var config: CraftIconViewConfig!
-
+    
+    private let titleLabel = CraftDynamicFontLabel()
+    private let coloredView = CraftColoredView(gradientColors: [.systemRed, .systemBlue], direction: .topLeftToBottomRight)
     
     init(text: String, config: CraftIconViewConfig) {
         super.init(frame: .zero)
         self.config = config
+        
         configureView(iconSize: config.iconSize.rawValue)
+        configureColoredView()
         configureTitleLabel(text: text)
+        
         updateStyle(with: config)
     }
     
@@ -28,7 +32,17 @@ class CraftIconView: UIView {
     
     
     func updateStyle(with config: CraftIconViewConfig) {
+        reset()
+        
         titleLabel.update(with: config.fontConfig)
+
+        if let colorConfig = config.colorConfig {
+            coloredView.update(with: colorConfig)
+            coloredView.isHidden = false
+        } else {
+            print("no config")
+        }
+        
         self.config = config
     }
     
@@ -37,7 +51,6 @@ class CraftIconView: UIView {
     }
     
     private func configureView(iconSize: CGFloat) {
-        backgroundColor = .systemPink
         translatesAutoresizingMaskIntoConstraints = false
         layer.cornerRadius = iconSize / 5
         clipsToBounds = true
@@ -57,5 +70,20 @@ class CraftIconView: UIView {
         ])
     }
     
+    private func configureColoredView() {
+        addSubview(coloredView)
+        sendSubviewToBack(coloredView)
+        coloredView.isHidden = true
+        
+        NSLayoutConstraint.activate([
+            coloredView.topAnchor.constraint(equalTo: topAnchor),
+            coloredView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            coloredView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            coloredView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
     
+    private func reset() {
+        coloredView.isHidden = true
+    }
 }

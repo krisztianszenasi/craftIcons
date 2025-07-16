@@ -19,12 +19,18 @@ class ViewController: UIViewController {
         
         let stack = UIStackView(arrangedSubviews: [
             CraftIconView(
-                text: "Hello",
+                text: "Team Acqusition",
                 config: CraftIconViewConfig(
-                    iconSize: .large,
+                    iconSize: .xlarge,
                     fontConfig: CraftFontConfig(
+                        name: "AvenirNext-Bold",
                         size: 30,
-                        color: .blue
+                        color: .white
+                    ),
+                    colorConfig: CraftColoredViewConfig(
+                        type: .gradient,
+                        gradientColors: [.systemRed, .systemBlue],
+                        colorDirection: .topLeftToBottomRight
                     )
                 )
             ),

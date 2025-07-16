@@ -19,4 +19,5 @@ enum CraftIconSize: CGFloat {
 struct CraftIconViewConfig {
     var iconSize: CraftIconSize
     var fontConfig: CraftFontConfig = CraftFontConfig()
+    var colorConfig: CraftColoredViewConfig? = nil
 }

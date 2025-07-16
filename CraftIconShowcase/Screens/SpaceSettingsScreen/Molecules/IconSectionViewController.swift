@@ -19,6 +19,7 @@ class IconSectionViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         configureSpaceIcon(spaceName: spaceName)
         configureLabels()
+        setupIconConfigNavigation()
     }
     
     required init?(coder: NSCoder) {
@@ -29,7 +30,10 @@ class IconSectionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         view.translatesAutoresizingMaskIntoConstraints = false
-        
+    }
+    
+    public func updateSpaceName(spaceName: String) {
+        spaceIcon.update(text: spaceName)
     }
     
     private func configureSpaceIcon(spaceName: String) {
@@ -79,5 +83,20 @@ class IconSectionViewController: UIViewController {
             stack.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
+    }
+    
+    private func setupIconConfigNavigation() {
+        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(navigateToIconConfig))
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(tapgesture)
+    }
+    
+    @objc func navigateToIconConfig() {
+        let iconConfigScreen = IconConfigurationScreen()
+        
+        if let parentVC = self.parent {
+            let navController = UINavigationController(rootViewController: iconConfigScreen)
+            parentVC.present(navController, animated: true)
+        }
     }
 }

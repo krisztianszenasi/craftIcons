@@ -15,6 +15,10 @@ class SpaceSettingsScreen: UIViewController {
     private let iconSection = UIView()
     private let spaceSettingsSection = UIView()
     private let footerSection = UIView()
+    
+    private var iconSectionVC: IconSectionViewController!
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +54,8 @@ class SpaceSettingsScreen: UIViewController {
             iconSection.heightAnchor.constraint(equalToConstant: 130)
         ])
         
-        add(childViewController: IconSectionViewController(spaceName: spaceName), to: iconSection)
+        iconSectionVC = IconSectionViewController(spaceName: spaceName)
+        add(childViewController: iconSectionVC, to: iconSection)
         UIHelpers.addSeparator(below: iconSection, in: view)
     }
     
@@ -70,7 +75,6 @@ class SpaceSettingsScreen: UIViewController {
     private func configureSpaceSettingsSection() {
         view.addSubview(spaceSettingsSection)
         spaceSettingsSection.translatesAutoresizingMaskIntoConstraints = false
-        spaceSettingsSection.backgroundColor = .systemPink
         
         NSLayoutConstraint.activate([
             spaceSettingsSection.topAnchor.constraint(equalTo: iconSection.bottomAnchor, constant: UIHelpers.padding),
@@ -79,6 +83,14 @@ class SpaceSettingsScreen: UIViewController {
             spaceSettingsSection.bottomAnchor.constraint(equalTo: footerSection.topAnchor, constant: -UIHelpers.padding)
         ])
         UIHelpers.addSeparator(below: iconSection, in: view)
+        
+        add(
+            childViewController: SpaceSettignsSectionViewController(spaceName: spaceName, updateSpaceName: {  [weak self]  spaceName in
+                guard let self = self else { return }
+                self.iconSectionVC.updateSpaceName(spaceName: spaceName)
+            }),
+            to: spaceSettingsSection
+        )
     }
 
     

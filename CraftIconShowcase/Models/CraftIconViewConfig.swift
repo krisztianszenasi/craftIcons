@@ -5,7 +5,7 @@
 //  Created by Krisztián Szénási on 2025. 07. 16..
 //
 
-import Foundation
+import UIKit
 
 
 enum CraftIconSize: CGFloat {
@@ -17,6 +17,6 @@ enum CraftIconSize: CGFloat {
 
 
 struct CraftIconViewConfig {
-    var text: String
     var iconSize: CraftIconSize
+    var fontConfig: CraftFontConfig = CraftFontConfig()
 }

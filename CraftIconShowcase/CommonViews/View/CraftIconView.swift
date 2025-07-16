@@ -10,15 +10,15 @@ import UIKit
 
 class CraftIconView: UIView {
 
-    private let titleLabel = CraftTitleLabel(textAlignment: .center, fontSize: 16)
+    private let titleLabel = CraftDynamicFontLabel()
     private var config: CraftIconViewConfig!
 
     
-    init(config: CraftIconViewConfig) {
+    init(text: String, config: CraftIconViewConfig) {
         super.init(frame: .zero)
         self.config = config
         configureView(iconSize: config.iconSize.rawValue)
-        configureTitleLabel(text: config.text)
+        configureTitleLabel(text: text)
         updateStyle(with: config)
     }
     
@@ -28,8 +28,7 @@ class CraftIconView: UIView {
     
     
     func updateStyle(with config: CraftIconViewConfig) {
-        titleLabel.font = UIFont.systemFont(ofSize: config.iconSize.rawValue / 3, weight: .bold)
-        titleLabel.text = StringUtils.getInitials(for: config.text)
+        titleLabel.update(with: config.fontConfig)
         self.config = config
     }
     
@@ -52,10 +51,9 @@ class CraftIconView: UIView {
     private func configureTitleLabel(text: String) {
         addSubview(titleLabel)
         titleLabel.text = StringUtils.getInitials(for: text)
-        
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
     

@@ -18,18 +18,16 @@ class ViewController: UIViewController {
         titleLabel.text = "Space Settings"
         
         let stack = UIStackView(arrangedSubviews: [
-            CraftIconView(config: CraftIconViewConfig(
-                text: "T", iconSize: .small
-            )),
-            CraftIconView(config: CraftIconViewConfig(
-                text: "T A", iconSize: .medium
-            )),
-            CraftIconView(config: CraftIconViewConfig(
-                text: "T A B", iconSize: .large
-            )),
-            CraftIconView(config: CraftIconViewConfig(
-                text: "T A B D", iconSize: .xlarge
-            )),
+            CraftIconView(
+                text: "Hello",
+                config: CraftIconViewConfig(
+                    iconSize: .large,
+                    fontConfig: CraftFontConfig(
+                        size: 30,
+                        color: .blue
+                    )
+                )
+            ),
         ])
         
         stack.axis = .vertical

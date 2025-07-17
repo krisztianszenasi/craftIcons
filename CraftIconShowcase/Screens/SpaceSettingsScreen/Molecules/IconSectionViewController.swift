@@ -37,22 +37,7 @@ class IconSectionViewController: UIViewController {
     }
     
     private func configureSpaceIcon(spaceName: String) {
-        spaceIcon = CraftIconView(
-            text: spaceName,
-            config: CraftIconViewConfig(
-                iconSize: .large,
-                fontConfig: CraftFontConfig(
-                    name: "AvenirNext-Bold",
-                    size: 30,
-                    color: .white
-                ),
-                colorConfig: CraftColoredViewConfig(
-                    type: .gradient,
-                    gradientColors: [.systemRed, .systemBlue],
-                    colorDirection: .topLeftToBottomRight
-                )
-            )
-        )
+        spaceIcon = CraftIconView(text: spaceName)
         view.addSubview(spaceIcon)
         
         NSLayoutConstraint.activate([

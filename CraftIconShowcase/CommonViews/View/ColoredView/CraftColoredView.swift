@@ -19,14 +19,14 @@ class CraftColoredView: UIView {
     init(solid: UIColor) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        self.config = CraftColoredViewConfig(type: .solid, solidColor: solid)
+        self.config = CraftColoredViewConfig(solidColor: solid)
         update(with: config)
     }
     
     init(gradientColors: [UIColor], direction: CraftColorDirection) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        self.config = CraftColoredViewConfig(type: .gradient, gradientColors: gradientColors, colorDirection: direction)
+        self.config = CraftColoredViewConfig(gradientColors: gradientColors, colorDirection: direction)
         update(with: config)
     }
 

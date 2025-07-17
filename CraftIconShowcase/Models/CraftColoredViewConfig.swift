@@ -19,4 +19,21 @@ struct CraftColoredViewConfig {
     
     var gradientColors: [UIColor]? = nil
     var colorDirection: CraftColorDirection? = nil
+    
+    init() {
+        self.type = .gradient
+        self.gradientColors = [.systemRed, .systemBlue]
+        self.colorDirection = .topLeftToBottomRight
+    }
+    
+    init(solidColor: UIColor) {
+        self.type = .solid
+        self.solidColor = solidColor
+    }
+    
+    init(gradientColors: [UIColor], colorDirection: CraftColorDirection) {
+        self.type = .gradient
+        self.gradientColors = gradientColors
+        self.colorDirection = colorDirection
+    }
 }

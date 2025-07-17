@@ -15,14 +15,12 @@ class CraftIconView: UIView {
     private let titleLabel = CraftDynamicFontLabel()
     private let coloredView = CraftColoredView(gradientColors: [.systemRed, .systemBlue], direction: .topLeftToBottomRight)
     
-    init(text: String, config: CraftIconViewConfig) {
+    init(text: String, config: CraftIconViewConfig = CraftIconViewConfig()) {
         super.init(frame: .zero)
         self.config = config
-        
         configureView()
         configureColoredView()
         configureTitleLabel(text: text)
-        
         updateStyle(with: config)
     }
     
@@ -57,6 +55,9 @@ class CraftIconView: UIView {
         coloredView.isHidden = true
     }
         
+    
+    // Mark: UI Config
+    
     private func configureView() {
         translatesAutoresizingMaskIntoConstraints = false
         layer.cornerRadius = 30

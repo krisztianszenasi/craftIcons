@@ -9,7 +9,7 @@ import UIKit
 
 
 struct CraftFontConfig {
-    var name: String? = nil
-    var size: CGFloat? = nil
-    var color: UIColor? = nil
+    var name: String = "AvenirNext-Bold"
+    var size: CGFloat = 30
+    var color: UIColor = .white
 }

@@ -8,6 +8,7 @@
 import UIKit
 
 struct CraftIconViewConfig {
+    var titleIsHidden = false
     var fontConfig: CraftFontConfig
     var colorConfig: CraftColoredViewConfig? = nil
     

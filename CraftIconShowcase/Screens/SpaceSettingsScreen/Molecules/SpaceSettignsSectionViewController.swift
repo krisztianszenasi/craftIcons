@@ -13,16 +13,21 @@ import UIKit
 class SpaceSettignsSectionViewController: UIViewController {
 
     private var spaceName: String
-    private let updateSpaceName: (String) -> Void  // ✅ FIXED closure
+    private let updateSpaceNameCallback: (String) -> Void
 
     private let spaceNameLabel = CraftTitleLabel(textAlignment: .left, fontSize: 16)
     private let spaceNameTextField = CraftTextField()
 
-    // ✅ FIXED init syntax
-    init(spaceName: String, updateSpaceName: @escaping (String) -> Void) {
+    init(spaceName: String, updateSpaceNameCallback: @escaping (String) -> Void) {
         self.spaceName = spaceName
-        self.updateSpaceName = updateSpaceName
+        self.updateSpaceNameCallback = updateSpaceNameCallback
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        view.translatesAutoresizingMaskIntoConstraints = false
         self.configure()
     }
 
@@ -49,8 +54,12 @@ class SpaceSettignsSectionViewController: UIViewController {
 
 extension SpaceSettignsSectionViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        updateSpaceName(textField.text ?? "")
+        updateSpaceNameCallback(textField.text ?? "")
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        updateSpaceNameCallback(textField.text ?? "")
     }
 }

@@ -8,6 +8,8 @@
 import UIKit
 
 class IconSectionViewController: UIViewController {
+    
+    private var spaceName: String!
 
     private var spaceIcon: CraftIconView!
     private var iconLabel = CraftTitleLabel(textAlignment: .left, fontSize: 20)
@@ -16,10 +18,8 @@ class IconSectionViewController: UIViewController {
     
     
     init(spaceName: String) {
+        self.spaceName = spaceName
         super.init(nibName: nil, bundle: nil)
-        configureSpaceIcon(spaceName: spaceName)
-        configureLabels()
-        setupIconConfigNavigation()
     }
     
     required init?(coder: NSCoder) {
@@ -30,9 +30,13 @@ class IconSectionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         view.translatesAutoresizingMaskIntoConstraints = false
+        configureSpaceIcon(spaceName: spaceName)
+        configureLabels()
+        setupIconConfigNavigation()
     }
     
     public func updateSpaceName(spaceName: String) {
+        self.spaceName = spaceName
         spaceIcon.update(text: spaceName)
     }
     
@@ -77,7 +81,10 @@ class IconSectionViewController: UIViewController {
     }
     
     @objc func navigateToIconConfig() {
-        let iconConfigScreen = IconConfigurationScreen()
+        let iconConfigScreen = IconConfigurationScreen(spaceName: spaceName, iconConfig: spaceIcon.getConfig()) { [weak self] updatedConfig in
+            guard let self = self else { return }
+            self.spaceIcon.updateStyle(with: updatedConfig)
+        }
         
         if let parentVC = self.parent {
             let navController = UINavigationController(rootViewController: iconConfigScreen)

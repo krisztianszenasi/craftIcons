@@ -12,8 +12,8 @@ class SpaceSettingsScreen: UIViewController {
     private var spaceName: String = "Team Acqusition"
     
     private let screenTitle = CraftTitleLabel(textAlignment: .left, fontSize: 34)
-    private let iconSection = UIView()
-    private let spaceSettingsSection = UIView()
+    private let headerSection = UIView()
+    private let bodySection = UIView()
     private let footerSection = UIView()
     
     private var iconSectionVC: IconSectionViewController!
@@ -43,20 +43,20 @@ class SpaceSettingsScreen: UIViewController {
     }
     
     private func configureIconSection() {
-        view.addSubview(iconSection)
-        iconSection.translatesAutoresizingMaskIntoConstraints = false
-        iconSection.backgroundColor = .systemPink
+        view.addSubview(headerSection)
+        headerSection.translatesAutoresizingMaskIntoConstraints = false
+        headerSection.backgroundColor = .systemPink
         
         NSLayoutConstraint.activate([
-            iconSection.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: UIHelpers.padding),
-            iconSection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-            iconSection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-            iconSection.heightAnchor.constraint(equalToConstant: 130)
+            headerSection.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: UIHelpers.padding),
+            headerSection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+            headerSection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
+            headerSection.heightAnchor.constraint(equalToConstant: 130)
         ])
         
         iconSectionVC = IconSectionViewController(spaceName: spaceName)
-        add(childViewController: iconSectionVC, to: iconSection)
-        UIHelpers.addSeparator(below: iconSection, in: view)
+        UIHelpers.add(childViewController: iconSectionVC, to: headerSection, in: self)
+        UIHelpers.addSeparator(below: headerSection, in: view)
     }
     
     private func configureFooterSection() {
@@ -73,41 +73,27 @@ class SpaceSettingsScreen: UIViewController {
     }
     
     private func configureSpaceSettingsSection() {
-        view.addSubview(spaceSettingsSection)
-        spaceSettingsSection.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(bodySection)
+        bodySection.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            spaceSettingsSection.topAnchor.constraint(equalTo: iconSection.bottomAnchor, constant: UIHelpers.padding),
-            spaceSettingsSection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-            spaceSettingsSection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-            spaceSettingsSection.bottomAnchor.constraint(equalTo: footerSection.topAnchor, constant: -UIHelpers.padding)
+            bodySection.topAnchor.constraint(equalTo: headerSection.bottomAnchor, constant: UIHelpers.padding),
+            bodySection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+            bodySection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
+            bodySection.bottomAnchor.constraint(equalTo: footerSection.topAnchor, constant: -UIHelpers.padding)
         ])
-        UIHelpers.addSeparator(below: iconSection, in: view)
+        UIHelpers.addSeparator(below: bodySection, in: view)
         
-        add(
-            childViewController: SpaceSettignsSectionViewController(spaceName: spaceName, updateSpaceName: {  [weak self]  spaceName in
-                guard let self = self else { return }
-                self.iconSectionVC.updateSpaceName(spaceName: spaceName)
-            }),
-            to: spaceSettingsSection
+        let spaceSettingsVC = SpaceSettignsSectionViewController(
+            spaceName: spaceName,
+            updateSpaceNameCallback: handleSpaceNameUpdate
         )
+        UIHelpers.add(childViewController: spaceSettingsVC, to: bodySection, in: self)
     }
-
     
-    func add(childViewController: UIViewController, to containerView: UIView) {
-        addChild(childViewController)
-        containerView.addSubview(childViewController.view)
-        
-        let childView = childViewController.view!
-        childView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            childView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            childView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            childView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            childView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
-        ])
-        
-        childViewController.didMove(toParent: self)
+    private func handleSpaceNameUpdate(_ newName: String) {
+        spaceName = newName
+        iconSectionVC.updateSpaceName(spaceName: newName)
     }
+    
 }

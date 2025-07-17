@@ -32,10 +32,16 @@ class CraftIconView: UIView {
         titleLabel.text = StringUtils.getInitials(for: text)
     }
     
+    func toggleText() {
+        config.titleIsHidden.toggle()
+        updateStyle(with: config)
+    }
+    
     func updateStyle(with config: CraftIconViewConfig) {
         reset()
         
         titleLabel.update(with: config.fontConfig)
+        titleLabel.isHidden = config.titleIsHidden
 
         if let colorConfig = config.colorConfig {
             coloredView.update(with: colorConfig)
@@ -55,9 +61,6 @@ class CraftIconView: UIView {
         coloredView.isHidden = true
     }
         
-    
-    // Mark: UI Config
-    
     private func configureView() {
         translatesAutoresizingMaskIntoConstraints = false
         layer.cornerRadius = 30

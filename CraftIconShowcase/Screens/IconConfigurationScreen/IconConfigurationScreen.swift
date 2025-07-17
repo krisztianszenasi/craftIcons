@@ -11,9 +11,15 @@ class IconConfigurationScreen: UIViewController {
     
     private var applyChangesCallback: (CraftIconViewConfig) -> Void
     
+    private let headerSection = UIView()
+    private let bodySection = UIView()
+    private let footerSection = UIView()
+    
     private let spaceIcon: CraftIconView!
     
     private var fontSettingSection = UIView()
+    private var solidColorSection = UIView()
+    private var gradientColorSection = UIView()
     private var applyChangesButton = CraftButton(backgroundColor: .systemBlue, title: "Apply changes")
     
     
@@ -34,10 +40,8 @@ class IconConfigurationScreen: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
+        layout()
         configureSpaceIcon()
-        configureFontSetting()
-        configureColorSettings()
-        configureImageSettings()
         configureApplyChangesButton()
     }
     
@@ -49,16 +53,61 @@ class IconConfigurationScreen: UIViewController {
     }
     
     private func configureSpaceIcon() {
-        view.addSubview(spaceIcon)
+        headerSection.addSubview(spaceIcon)
         NSLayoutConstraint.activate([
-            spaceIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: UIHelpers.padding),
-            spaceIcon.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/2),
+            spaceIcon.topAnchor.constraint(equalTo: headerSection.topAnchor),
+            spaceIcon.widthAnchor.constraint(equalTo: headerSection.heightAnchor),
             spaceIcon.heightAnchor.constraint(equalTo: spaceIcon.widthAnchor),
-            spaceIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            spaceIcon.centerXAnchor.constraint(equalTo: headerSection.centerXAnchor)
         ])
-        UIHelpers.addSeparator(above: spaceIcon, in: view)
-        UIHelpers.addSeparator(below: spaceIcon, in: view)
     }
+    
+    private func configureApplyChangesButton() {
+        footerSection.addSubview(applyChangesButton)
+        
+        applyChangesButton.addTarget(self, action: #selector(applyChangesButtonTap), for: .touchUpInside)
+        
+        NSLayoutConstraint.activate([
+            applyChangesButton.bottomAnchor.constraint(equalTo: footerSection.bottomAnchor),
+            applyChangesButton.leadingAnchor.constraint(equalTo: footerSection.leadingAnchor),
+            applyChangesButton.trailingAnchor.constraint(equalTo: footerSection.trailingAnchor),
+            applyChangesButton.topAnchor.constraint(equalTo: footerSection.topAnchor)
+        ])
+    }
+    
+    
+    private func layout() {
+        headerSection.translatesAutoresizingMaskIntoConstraints = false
+        bodySection.translatesAutoresizingMaskIntoConstraints = false
+        bodySection.backgroundColor = .systemPink
+        footerSection.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(headerSection)
+        view.addSubview(bodySection)
+        view.addSubview(footerSection)
+        
+        UIHelpers.addSeparator(above: headerSection, in: view)
+        UIHelpers.addSeparator(below: headerSection, in: view)
+        UIHelpers.addSeparator(below: bodySection, in: view)
+        
+        NSLayoutConstraint.activate([
+            headerSection.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: UIHelpers.padding),
+            headerSection.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/2),
+            headerSection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+            headerSection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
+            
+            footerSection.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier:  1/8),
+            footerSection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+            footerSection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
+            footerSection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -UIHelpers.padding),
+            
+            bodySection.topAnchor.constraint(equalTo: headerSection.bottomAnchor, constant: UIHelpers.padding),
+            bodySection.bottomAnchor.constraint(equalTo: footerSection.topAnchor, constant: -UIHelpers.padding),
+            bodySection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+            bodySection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding)
+        ])
+    }
+
     
     private func configureFontSetting() {
         view.addSubview(fontSettingSection)
@@ -82,55 +131,6 @@ class IconConfigurationScreen: UIViewController {
         UIHelpers.add(childViewController: fontSetting, to: fontSettingSection, in: self)
     }
     
-    private func configureColorSettings() {
-//        let view1 = UIView()
-//        view.backgroundColor = .systemRed
-//        let view2 = UIView()
-//        view.backgroundColor = .systemGreen
-//        
-//        let switcher = CraftSegmentedSwitcherViewController(tabs: [
-//            ("read", view1),
-//            ("green", view2)
-//        ])
-//        
-//        colorSettings = IconSettingView(title: "Use colored background", isOn: true, childView: nil, onToggleSetting: {
-//            // hello
-//        })
-//        view.addSubview(colorSettings)
-//        NSLayoutConstraint.activate([
-//            colorSettings.topAnchor.constraint(equalTo: fontSetting.bottomAnchor, constant: UIHelpers.padding),
-//            colorSettings.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-//            colorSettings.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-//            colorSettings.heightAnchor.constraint(equalToConstant: 25)
-//        ])
-//        UIHelpers.addSeparator(below: colorSettings, in: view)
-    }
-    
-    private func configureImageSettings() {
-//        imageSetttings = IconSettingView(title: "Use image as background", isOn: false, onToggleSetting: {
-//            // hello
-//        })
-//        view.addSubview(imageSetttings)
-//        NSLayoutConstraint.activate([
-//            imageSetttings.topAnchor.constraint(equalTo: colorSettings.bottomAnchor, constant: UIHelpers.padding),
-//            imageSetttings.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-//            imageSetttings.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-//            imageSetttings.heightAnchor.constraint(equalToConstant: 25)
-//        ])
-    }
-    
-    private func configureApplyChangesButton() {
-        view.addSubview(applyChangesButton)
-        
-        applyChangesButton.addTarget(self, action: #selector(applyChangesButtonTap), for: .touchUpInside)
-        
-        NSLayoutConstraint.activate([
-            applyChangesButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
-            applyChangesButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-            applyChangesButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-            applyChangesButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
     
     @objc func applyChangesButtonTap() {
         applyChangesCallback(spaceIcon.getConfig())

@@ -11,64 +11,82 @@ class SpaceSettingsScreen: UIViewController {
     
     private var spaceName: String = "Team Acqusition"
     
-    private let screenTitle = CraftTitleLabel(textAlignment: .left, fontSize: 34)
+    private let titleLabel = CraftTitleLabel(textAlignment: .left, fontSize: 34)
     private let headerSection = UIView()
     private let bodySection = UIView()
     private let footerSection = UIView()
     
     private var iconSectionVC: IconSectionViewController!
     
-    
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        configureScreenTitle()
-        configureIconSection()
-        configureFooterSection()
-        configureSpaceSettingsSection()
+        layout()
+        includeSeparators()
+        fillSections()
     }
     
-    
-    private func configureScreenTitle() {
-        view.addSubview(screenTitle)
-        screenTitle.text = "Space Settings"
-        NSLayoutConstraint.activate([
-            screenTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: UIHelpers.padding),
-            screenTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-            screenTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-            screenTitle.heightAnchor.constraint(equalToConstant: 38)
-        ])
-        UIHelpers.addSeparator(below: screenTitle, in: view)
-    }
-    
-    private func configureIconSection() {
+    private func layout() {
+        titleLabel.text = "Space Settings"
+        
+        view.addSubview(titleLabel)
         view.addSubview(headerSection)
+        view.addSubview(footerSection)
+        view.addSubview(bodySection)
+    
         headerSection.translatesAutoresizingMaskIntoConstraints = false
-        headerSection.backgroundColor = .systemPink
+        footerSection.translatesAutoresizingMaskIntoConstraints = false
+        bodySection.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            headerSection.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: UIHelpers.padding),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: UIHelpers.padding),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
+            titleLabel.heightAnchor.constraint(equalToConstant: 38),
+            
+            headerSection.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: UIHelpers.padding),
             headerSection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
             headerSection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-            headerSection.heightAnchor.constraint(equalToConstant: 130)
-        ])
-        
-        iconSectionVC = IconSectionViewController(spaceName: spaceName)
-        UIHelpers.add(childViewController: iconSectionVC, to: headerSection, in: self)
-        UIHelpers.addSeparator(below: headerSection, in: view)
-    }
-    
-    private func configureFooterSection() {
-        view.addSubview(footerSection)
-        footerSection.translatesAutoresizingMaskIntoConstraints = false
-        footerSection.backgroundColor = .systemPink
-        
-        NSLayoutConstraint.activate([
+            headerSection.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/3),
+            
             footerSection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -UIHelpers.padding),
             footerSection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
             footerSection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-            footerSection.heightAnchor.constraint(equalToConstant: 50)
+            footerSection.heightAnchor.constraint(equalToConstant: 50),
+            
+            bodySection.topAnchor.constraint(equalTo: headerSection.bottomAnchor, constant: UIHelpers.padding),
+            bodySection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+            bodySection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
+            bodySection.bottomAnchor.constraint(equalTo: footerSection.topAnchor, constant: -UIHelpers.padding)
+        ])
+    }
+    
+    private func includeSeparators() {
+        let shouldHaveSeparatorsBelow = [titleLabel, headerSection, bodySection]
+        for viewAbove in shouldHaveSeparatorsBelow {
+            UIHelpers.addSeparator(below: viewAbove, in: view)
+        }
+    }
+    
+    private func fillSections() {
+        iconSectionVC = IconSectionViewController(spaceName: spaceName)
+        UIHelpers.add(childViewController: iconSectionVC, to: headerSection, in: self)
+        UIHelpers.add(
+            childViewController: SpaceSettignsSectionViewController(
+                spaceName: spaceName,
+                updateSpaceNameCallback: handleSpaceNameUpdate
+            ),
+            to: bodySection,
+            in: self
+        )
+        
+        let footerLabel = CraftBodyLabel(textAlignment: .center)
+        footerLabel.text = "made by krisztianszenasi"
+        footerSection.addSubview(footerLabel)
+        
+        NSLayoutConstraint.activate([
+            footerLabel.centerXAnchor.constraint(equalTo: footerSection.centerXAnchor),
+            footerLabel.centerYAnchor.constraint(equalTo: footerSection.centerYAnchor)
         ])
     }
     
@@ -95,5 +113,4 @@ class SpaceSettingsScreen: UIViewController {
         spaceName = newName
         iconSectionVC.updateSpaceName(spaceName: newName)
     }
-    
 }

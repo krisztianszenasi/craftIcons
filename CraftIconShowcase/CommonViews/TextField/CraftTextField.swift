@@ -8,6 +8,9 @@
 import UIKit
 
 class CraftTextField: UITextField {
+    
+    private let padding = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -26,14 +29,28 @@ class CraftTextField: UITextField {
         
         textColor = .label
         tintColor = .label
-        textAlignment = .center
-        font = UIFont.preferredFont(forTextStyle: .title2)
+        textAlignment = .left
+        font = UIFont.preferredFont(forTextStyle: .body)
         adjustsFontSizeToFitWidth = true
         minimumFontSize = 12
         
         backgroundColor = .tertiarySystemBackground
         autocorrectionType = .no
         returnKeyType = .go
-        autocapitalizationType = .none
+        
+        placeholder = "Enter a username"
     }
+    
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: padding)
+    }
+
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: padding)
+    }
+
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: padding)
+    }
+    
 }

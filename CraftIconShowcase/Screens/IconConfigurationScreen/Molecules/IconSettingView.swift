@@ -7,77 +7,74 @@
 
 import UIKit
 
-class IconSettingView: UIView {
+class IconSettingViewController: UIViewController {
 
-    private var onToggleSetting: ((Bool) -> Void)?
-
-    private let titleLabel = CraftTitleLabel(textAlignment: .left, fontSize: 16)
-    private let switchButton = UISwitch()
+    private let titleLabel = UILabel()
+    private let toggleSwitch = UISwitch()
     private let contentContainer = UIView()
-    private var contentContainerHeightConstraint: NSLayoutConstraint?
+    private let stackView = UIStackView()
+    private var onToggle: ((Bool) -> Void)?
 
-    init(title: String, isOn: Bool, childView: UIView? = nil, onToggleSetting: ((Bool) -> Void)? = nil) {
-        self.onToggleSetting = onToggleSetting
-        super.init(frame: .zero)
+    init(title: String, isOn: Bool, child: Any?, onToggle: ((Bool) -> Void)? = nil) {
+        self.onToggle = onToggle
+        super.init(nibName: nil, bundle: nil)
+        toggleSwitch.isOn = isOn
         titleLabel.text = title
-        switchButton.isOn = isOn
-        backgroundColor = .systemBackground
-        translatesAutoresizingMaskIntoConstraints = false
 
-        configureTitleLabel()
-        configureSwitchButton()
-        configureContentContainer()
-
-        if let child = childView {
-            addChildView(child)
+        if let viewController = child as? UIViewController {
+            UIHelpers.add(childViewController: viewController, to: contentContainer, in: self)
+        } else if let view = child as? UIView {
+            addChildView(view)
         }
-
-        updateContentVisibility(animated: false)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func configureTitleLabel() {
-        addSubview(titleLabel)
-        titleLabel.textColor = .label
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            titleLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.8),
-            titleLabel.heightAnchor.constraint(equalToConstant: 24)
-        ])
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureUI()
+        updateVisibility(animated: false)
     }
 
-    private func configureSwitchButton() {
-        addSubview(switchButton)
-        switchButton.translatesAutoresizingMaskIntoConstraints = false
-        switchButton.isUserInteractionEnabled = true
-        switchButton.addTarget(self, action: #selector(handleToggle), for: .valueChanged)
+    private func configureUI() {
+        view.backgroundColor = .systemBackground
+        view.translatesAutoresizingMaskIntoConstraints = false
 
-        NSLayoutConstraint.activate([
-            switchButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            switchButton.trailingAnchor.constraint(equalTo: trailingAnchor)
-        ])
-    }
+        // Configure stackView
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-    private func configureContentContainer() {
-        addSubview(contentContainer)
+        // Title row
+        let titleRow = UIStackView(arrangedSubviews: [titleLabel, toggleSwitch])
+        titleRow.axis = .horizontal
+        titleRow.spacing = 8
+        titleRow.distribution = .equalSpacing
+        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        toggleSwitch.setContentHuggingPriority(.required, for: .horizontal)
+
+        // Configure content container
         contentContainer.translatesAutoresizingMaskIntoConstraints = false
-        contentContainer.clipsToBounds = true // Hide when collapsed
+        contentContainer.clipsToBounds = true
 
-        contentContainerHeightConstraint = contentContainer.heightAnchor.constraint(equalToConstant: 0)
-        contentContainerHeightConstraint?.isActive = true
+        // Add components to stack
+        stackView.addArrangedSubview(titleRow)
+        stackView.addArrangedSubview(contentContainer)
+
+        view.addSubview(stackView)
 
         NSLayoutConstraint.activate([
-            contentContainer.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+
+        toggleSwitch.addTarget(self, action: #selector(toggleChanged), for: .valueChanged)
     }
 
     private func addChildView(_ view: UIView) {
@@ -91,24 +88,28 @@ class IconSettingView: UIView {
         ])
     }
 
-    @objc private func handleToggle() {
-        updateContentVisibility(animated: false)
-        onToggleSetting?(switchButton.isOn)
+    @objc private func toggleChanged() {
+        updateVisibility(animated: true)
+        onToggle?(toggleSwitch.isOn)
     }
 
-    private func updateContentVisibility(animated: Bool) {
-        let show = switchButton.isOn
+    private func updateVisibility(animated: Bool) {
+        let isVisible = toggleSwitch.isOn
 
-        contentContainerHeightConstraint?.isActive = false
-        contentContainerHeightConstraint = contentContainer.heightAnchor.constraint(equalToConstant: show ? 120 : 0)
-        contentContainerHeightConstraint?.isActive = true
+        // Hide or show the content immediately (no fade animation)
+        contentContainer.isHidden = false // make it visible temporarily to allow animation
 
         if animated {
-            UIView.animate(withDuration: 0.25) {
-                self.layoutIfNeeded()
-            }
+            UIView.animate(withDuration: 0.25, animations: {
+                self.contentContainer.alpha = isVisible ? 1 : 0
+                self.stackView.layoutIfNeeded()
+            }, completion: { _ in
+                // After resizing, hide it if needed (without animation)
+                self.contentContainer.isHidden = !isVisible
+                self.contentContainer.alpha = 1
+            })
         } else {
-            layoutIfNeeded()
+            contentContainer.isHidden = !isVisible
         }
     }
 }

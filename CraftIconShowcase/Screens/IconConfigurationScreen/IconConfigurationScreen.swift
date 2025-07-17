@@ -12,10 +12,14 @@ class IconConfigurationScreen: UIViewController {
     private var applyChangesCallback: (CraftIconViewConfig) -> Void
     
     private let spaceIcon: CraftIconView!
-    private var fontSetting: IconSettingView!
-    private var colorSettings: IconSettingView!
-    private var imageSetttings: IconSettingView!
+    
+    private var fontSettingSection = UIView()
     private var applyChangesButton = CraftButton(backgroundColor: .systemBlue, title: "Apply changes")
+    
+    
+    private var fontSetting: IconSettingViewController!
+    private var colorSettings: IconSettingViewController!
+    private var imageSetttings: IconSettingViewController!
 
     init(spaceName: String, iconConfig: CraftIconViewConfig, applyChangesCallback: @escaping (CraftIconViewConfig) -> Void) {
         spaceIcon = CraftIconView(text: spaceName, config: iconConfig)
@@ -57,25 +61,39 @@ class IconConfigurationScreen: UIViewController {
     }
     
     private func configureFontSetting() {
+        view.addSubview(fontSettingSection)
+        fontSettingSection.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            fontSettingSection.topAnchor.constraint(equalTo: spaceIcon.bottomAnchor, constant: UIHelpers.padding),
+            fontSettingSection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+            fontSettingSection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
+        ])
+        UIHelpers.addSeparator(below: fontSettingSection, in: view)
+        
         let fontPicker = IconFontSettings()
         fontPicker.onFontSelected = { [weak self] fontName in
             self?.spaceIcon.updateFont(fontName: fontName)
         }
-        fontSetting = IconSettingView(title: "Display font", isOn: !spaceIcon.getConfig().titleIsHidden, childView: fontPicker) { [weak self] _ in
+        fontSetting = IconSettingViewController(title: "Display Text", isOn: !spaceIcon.getConfig().titleIsHidden, child: fontPicker) { [weak self] _ in
             guard let self = self else { return }
             self.spaceIcon.toggleText()
         }
-        view.addSubview(fontSetting)
-        NSLayoutConstraint.activate([
-            fontSetting.topAnchor.constraint(equalTo: spaceIcon.bottomAnchor, constant: UIHelpers.padding),
-            fontSetting.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-            fontSetting.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-        ])
-        UIHelpers.addSeparator(below: fontSetting, in: view)
+        UIHelpers.add(childViewController: fontSetting, to: fontSettingSection, in: self)
     }
     
     private func configureColorSettings() {
-//        colorSettings = IconSettingView(title: "Use colored background", isOn: true, childView: nil,  onToggleSetting: {
+//        let view1 = UIView()
+//        view.backgroundColor = .systemRed
+//        let view2 = UIView()
+//        view.backgroundColor = .systemGreen
+//        
+//        let switcher = CraftSegmentedSwitcherViewController(tabs: [
+//            ("read", view1),
+//            ("green", view2)
+//        ])
+//        
+//        colorSettings = IconSettingView(title: "Use colored background", isOn: true, childView: nil, onToggleSetting: {
 //            // hello
 //        })
 //        view.addSubview(colorSettings)

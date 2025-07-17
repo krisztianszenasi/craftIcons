@@ -12,6 +12,8 @@ class IconFontSettings: UIView {
     private let titleLabel = CraftBodyLabel(textAlignment: .left)
     private let fontPicker = UIPickerView()
     
+    private let stackView = UIStackView()
+
     private let availableFonts = [
         "AvenirNext-Bold",
         "HelveticaNeue",
@@ -31,30 +33,32 @@ class IconFontSettings: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func configure() {
         translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "Font family"
         
+        titleLabel.text = "Font family"
         fontPicker.dataSource = self
         fontPicker.delegate = self
-        
-        addSubview(titleLabel)
-        addSubview(fontPicker)
-        
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        fontPicker.translatesAutoresizingMaskIntoConstraints = false
+
+        // Configure stack view
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(stackView)
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(fontPicker)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 24),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            fontPicker.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            fontPicker.leadingAnchor.constraint(equalTo: leadingAnchor),
-            fontPicker.trailingAnchor.constraint(equalTo: trailingAnchor),
-            fontPicker.bottomAnchor.constraint(equalTo: bottomAnchor)
+            titleLabel.heightAnchor.constraint(equalToConstant: 24)
         ])
     }
 }

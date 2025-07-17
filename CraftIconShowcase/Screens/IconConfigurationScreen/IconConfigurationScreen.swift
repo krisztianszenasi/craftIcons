@@ -64,11 +64,40 @@ class IconConfigurationScreen: UIViewController {
     }
     
     private func configureSettingsSection() {
-        let icon = IconConfigSettingsSection()
-        UIHelpers.add(childViewController: icon, to: bodySection, in: self)
+        // 1. Create content view inside scroll view
+        let scrollContentView = UIView()
+        scrollContentView.translatesAutoresizingMaskIntoConstraints = false
+        bodySection.addSubview(scrollContentView)
+
+        // 2. Pin content view to scroll view
         NSLayoutConstraint.activate([
-            icon.view.widthAnchor.constraint(equalTo: bodySection.widthAnchor)
+            scrollContentView.topAnchor.constraint(equalTo: bodySection.topAnchor),
+            scrollContentView.leadingAnchor.constraint(equalTo: bodySection.leadingAnchor),
+            scrollContentView.trailingAnchor.constraint(equalTo: bodySection.trailingAnchor),
+            scrollContentView.bottomAnchor.constraint(equalTo: bodySection.bottomAnchor),
+            scrollContentView.widthAnchor.constraint(equalTo: bodySection.widthAnchor) // important for vertical scrolling
         ])
+
+        // 3. Create and embed child view controller
+        let iconSettingsVC = IconConfigSettingsSection(iconConfig: spaceIcon.getConfig()) { [weak self] config in
+            self?.spaceIcon.updateStyle(with: config)
+        }
+
+        addChild(iconSettingsVC)
+        scrollContentView.addSubview(iconSettingsVC.view)
+        iconSettingsVC.view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            iconSettingsVC.view.topAnchor.constraint(equalTo: scrollContentView.topAnchor),
+            iconSettingsVC.view.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
+            iconSettingsVC.view.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -4),
+            iconSettingsVC.view.bottomAnchor.constraint(equalTo: scrollContentView.bottomAnchor),
+            
+            // 💡 This line ensures the scroll view has a defined content height
+            iconSettingsVC.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 500) // try an appropriate value here
+        ])
+
+        iconSettingsVC.didMove(toParent: self)
     }
     
     private func configureApplyChangesButton() {
@@ -116,30 +145,6 @@ class IconConfigurationScreen: UIViewController {
         ])
     }
 
-    
-    private func configureFontSetting() {
-        view.addSubview(fontSettingSection)
-        fontSettingSection.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            fontSettingSection.topAnchor.constraint(equalTo: spaceIcon.bottomAnchor, constant: UIHelpers.padding),
-            fontSettingSection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-            fontSettingSection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-        ])
-        UIHelpers.addSeparator(below: fontSettingSection, in: view)
-        
-        let fontPicker = IconFontSettings()
-        fontPicker.onFontSelected = { [weak self] fontName in
-            self?.spaceIcon.updateFont(fontName: fontName)
-        }
-        fontSetting = IconSettingViewController(title: "Display Text", isOn: !spaceIcon.getConfig().titleIsHidden, child: fontPicker) { [weak self] _ in
-            guard let self = self else { return }
-            self.spaceIcon.toggleText()
-        }
-        UIHelpers.add(childViewController: fontSetting, to: fontSettingSection, in: self)
-    }
-    
-    
     @objc func applyChangesButtonTap() {
         applyChangesCallback(spaceIcon.getConfig())
         dismissVC()

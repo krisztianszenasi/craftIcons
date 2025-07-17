@@ -56,7 +56,7 @@ class IconSettingViewController: UIViewController {
         titleRow.distribution = .equalSpacing
         titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         toggleSwitch.setContentHuggingPriority(.required, for: .horizontal)
-
+        
         // Configure content container
         contentContainer.translatesAutoresizingMaskIntoConstraints = false
         contentContainer.clipsToBounds = true

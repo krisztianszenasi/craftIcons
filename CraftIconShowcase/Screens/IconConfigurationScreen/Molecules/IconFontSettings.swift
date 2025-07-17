@@ -41,7 +41,6 @@ class IconFontSettings: UIView {
         fontPicker.dataSource = self
         fontPicker.delegate = self
 
-        // Configure stack view
         stackView.axis = .vertical
         stackView.spacing = 8
         stackView.alignment = .fill

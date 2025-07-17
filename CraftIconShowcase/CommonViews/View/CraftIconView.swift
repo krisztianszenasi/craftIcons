@@ -37,6 +37,11 @@ class CraftIconView: UIView {
         updateStyle(with: config)
     }
     
+    func updateFont(fontName: String) {
+        config.fontConfig.name = fontName
+        updateStyle(with: config)
+    }
+    
     func updateStyle(with config: CraftIconViewConfig) {
         reset()
         

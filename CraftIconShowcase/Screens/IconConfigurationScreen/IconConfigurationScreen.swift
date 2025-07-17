@@ -57,42 +57,48 @@ class IconConfigurationScreen: UIViewController {
     }
     
     private func configureFontSetting() {
-        fontSetting = IconSettingView(title: "Display font", isOn: !spaceIcon.getConfig().titleIsHidden, onToggleSetting: { self.spaceIcon.toggleText() })
+        let fontPicker = IconFontSettings()
+        fontPicker.onFontSelected = { [weak self] fontName in
+            self?.spaceIcon.updateFont(fontName: fontName)
+        }
+        fontSetting = IconSettingView(title: "Display font", isOn: !spaceIcon.getConfig().titleIsHidden, childView: fontPicker) { [weak self] _ in
+            guard let self = self else { return }
+            self.spaceIcon.toggleText()
+        }
         view.addSubview(fontSetting)
         NSLayoutConstraint.activate([
             fontSetting.topAnchor.constraint(equalTo: spaceIcon.bottomAnchor, constant: UIHelpers.padding),
             fontSetting.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
             fontSetting.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-            fontSetting.heightAnchor.constraint(equalToConstant: 25)
         ])
         UIHelpers.addSeparator(below: fontSetting, in: view)
     }
     
     private func configureColorSettings() {
-        colorSettings = IconSettingView(title: "Use colored background", isOn: true, onToggleSetting: {
-            // hello
-        })
-        view.addSubview(colorSettings)
-        NSLayoutConstraint.activate([
-            colorSettings.topAnchor.constraint(equalTo: fontSetting.bottomAnchor, constant: UIHelpers.padding),
-            colorSettings.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-            colorSettings.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-            colorSettings.heightAnchor.constraint(equalToConstant: 25)
-        ])
-        UIHelpers.addSeparator(below: colorSettings, in: view)
+//        colorSettings = IconSettingView(title: "Use colored background", isOn: true, childView: nil,  onToggleSetting: {
+//            // hello
+//        })
+//        view.addSubview(colorSettings)
+//        NSLayoutConstraint.activate([
+//            colorSettings.topAnchor.constraint(equalTo: fontSetting.bottomAnchor, constant: UIHelpers.padding),
+//            colorSettings.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+//            colorSettings.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
+//            colorSettings.heightAnchor.constraint(equalToConstant: 25)
+//        ])
+//        UIHelpers.addSeparator(below: colorSettings, in: view)
     }
     
     private func configureImageSettings() {
-        imageSetttings = IconSettingView(title: "Use image as background", isOn: false, onToggleSetting: {
-            // hello
-        })
-        view.addSubview(imageSetttings)
-        NSLayoutConstraint.activate([
-            imageSetttings.topAnchor.constraint(equalTo: colorSettings.bottomAnchor, constant: UIHelpers.padding),
-            imageSetttings.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
-            imageSetttings.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
-            imageSetttings.heightAnchor.constraint(equalToConstant: 25)
-        ])
+//        imageSetttings = IconSettingView(title: "Use image as background", isOn: false, onToggleSetting: {
+//            // hello
+//        })
+//        view.addSubview(imageSetttings)
+//        NSLayoutConstraint.activate([
+//            imageSetttings.topAnchor.constraint(equalTo: colorSettings.bottomAnchor, constant: UIHelpers.padding),
+//            imageSetttings.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIHelpers.padding),
+//            imageSetttings.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIHelpers.padding),
+//            imageSetttings.heightAnchor.constraint(equalToConstant: 25)
+//        ])
     }
     
     private func configureApplyChangesButton() {

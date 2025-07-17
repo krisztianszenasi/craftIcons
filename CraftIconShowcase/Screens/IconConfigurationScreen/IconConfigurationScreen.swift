@@ -12,7 +12,7 @@ class IconConfigurationScreen: UIViewController {
     private var applyChangesCallback: (CraftIconViewConfig) -> Void
     
     private let headerSection = UIView()
-    private let bodySection = UIView()
+    private let bodySection = UIScrollView()
     private let footerSection = UIView()
     
     private let spaceIcon: CraftIconView!
@@ -42,6 +42,7 @@ class IconConfigurationScreen: UIViewController {
         configureViewController()
         layout()
         configureSpaceIcon()
+        configureSettingsSection()
         configureApplyChangesButton()
     }
     
@@ -62,6 +63,14 @@ class IconConfigurationScreen: UIViewController {
         ])
     }
     
+    private func configureSettingsSection() {
+        let icon = IconConfigSettingsSection()
+        UIHelpers.add(childViewController: icon, to: bodySection, in: self)
+        NSLayoutConstraint.activate([
+            icon.view.widthAnchor.constraint(equalTo: bodySection.widthAnchor)
+        ])
+    }
+    
     private func configureApplyChangesButton() {
         footerSection.addSubview(applyChangesButton)
         
@@ -79,7 +88,6 @@ class IconConfigurationScreen: UIViewController {
     private func layout() {
         headerSection.translatesAutoresizingMaskIntoConstraints = false
         bodySection.translatesAutoresizingMaskIntoConstraints = false
-        bodySection.backgroundColor = .systemPink
         footerSection.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(headerSection)

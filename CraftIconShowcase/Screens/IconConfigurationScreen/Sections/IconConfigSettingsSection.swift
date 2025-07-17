@@ -11,6 +11,10 @@ class IconConfigSettingsSection: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .green
+        NSLayoutConstraint.activate([
+            view.heightAnchor.constraint(equalToConstant: 1000)
+        ])
     }
 }

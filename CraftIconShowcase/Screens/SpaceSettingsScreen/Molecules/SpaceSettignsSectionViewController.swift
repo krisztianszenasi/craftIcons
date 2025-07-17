@@ -15,8 +15,8 @@ class SpaceSettignsSectionViewController: UIViewController {
     private var spaceName: String
     private let updateSpaceNameCallback: (String) -> Void
     
-    private let spaceNameLabel = CraftSecondaryTitleLabel(fontSize: 16)
-    private let spaceNameTextField = CraftTextField()
+    private var spaceNameSetting: CraftLabeledChildView!
+    private var collaboratorsSetting: CraftLabeledChildView!
     
     init(spaceName: String, updateSpaceNameCallback: @escaping (String) -> Void) {
         self.spaceName = spaceName
@@ -28,40 +28,47 @@ class SpaceSettignsSectionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         view.translatesAutoresizingMaskIntoConstraints = false
-        self.configure()
+        self.configureSpaceNameSetting()
+        self.configureCollaboratorsSetting()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func configure() {
-        view.addSubview(spaceNameLabel)
-        view.addSubview(spaceNameTextField)
-        
-        spaceNameLabel.text = "Space Name"
-        spaceNameLabel.textColor = .label
-        
+    private func configureSpaceNameSetting() {
+        let spaceNameTextField = CraftTextField()
         spaceNameTextField.delegate = self
         spaceNameTextField.textAlignment = .left
         spaceNameTextField.placeholder = "Set your space name ..."
         spaceNameTextField.text = spaceName
-        
-        spaceNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        spaceNameTextField.translatesAutoresizingMaskIntoConstraints = false
-        
+        spaceNameSetting = CraftLabeledChildView(text: "Space Name", child: spaceNameTextField)
+        view.addSubview(spaceNameSetting)
 
         NSLayoutConstraint.activate([
-            spaceNameLabel.topAnchor.constraint(equalTo: view.topAnchor),
-            spaceNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:  4),
-            spaceNameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            spaceNameLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            spaceNameTextField.topAnchor.constraint(equalTo: spaceNameLabel.bottomAnchor, constant: 4),
-            spaceNameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            spaceNameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            spaceNameSetting.topAnchor.constraint(equalTo: view.topAnchor),
+            spaceNameSetting.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            spaceNameSetting.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             spaceNameTextField.heightAnchor.constraint(equalToConstant: 50)
         ])
+    }
+    
+    private func configureCollaboratorsSetting() {
+        let spaceNameTextField = CraftTextField()
+        spaceNameTextField.delegate = self
+        spaceNameTextField.textAlignment = .left
+        spaceNameTextField.placeholder = "Set your space name ..."
+        spaceNameTextField.text = spaceName
+        collaboratorsSetting = CraftLabeledChildView(text: "Collaborators", child: spaceNameTextField)
+        view.addSubview(collaboratorsSetting)
+
+        NSLayoutConstraint.activate([
+            collaboratorsSetting.topAnchor.constraint(equalTo: spaceNameSetting.bottomAnchor, constant: UIHelpers.padding),
+            collaboratorsSetting.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collaboratorsSetting.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            spaceNameTextField.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
     }
 }
 

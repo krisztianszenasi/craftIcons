@@ -12,8 +12,10 @@ struct CraftIconViewConfig {
     var fontConfig: CraftFontConfig
     var colorConfig: CraftColoredViewConfig? = nil
     
-    init() {
-        fontConfig = CraftFontConfig()
-        colorConfig = CraftColoredViewConfig()
+    
+    init(titleIsHidden: Bool = false, fontConfig: CraftFontConfig = CraftFontConfig(), colorConfig: CraftColoredViewConfig = CraftColoredViewConfig()) {
+        self.titleIsHidden = titleIsHidden
+        self.fontConfig = fontConfig
+        self.colorConfig = colorConfig
     }
 }

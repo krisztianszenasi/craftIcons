@@ -49,6 +49,8 @@ class CraftColoredView: UIView {
             ])
 
             gradientLayer = gradient
+        default:
+            backgroundColor = .secondarySystemBackground
         }
     }
     

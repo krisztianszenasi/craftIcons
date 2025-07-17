@@ -8,6 +8,7 @@
 import UIKit
 
 enum CraftColorType {
+    case none
     case solid
     case gradient
 }
@@ -16,12 +17,12 @@ struct CraftColoredViewConfig {
     var type: CraftColorType
     
     var solidColor: UIColor? = nil
-    
     var gradientColors: [UIColor]? = nil
     var colorDirection: CraftColorDirection? = nil
     
     init() {
         self.type = .gradient
+        self.solidColor = .systemRed
         self.gradientColors = [.systemRed, .systemBlue]
         self.colorDirection = .topLeftToBottomRight
     }

@@ -37,6 +37,12 @@ class IconSettingViewController: UIViewController {
         configureUI()
         updateVisibility(animated: false)
     }
+    
+    func toggle(animated: Bool = true) {
+        let newValue = !toggleSwitch.isOn
+        toggleSwitch.setOn(newValue, animated: animated)
+        toggleChanged()
+    }
 
     private func configureUI() {
         view.backgroundColor = .systemBackground

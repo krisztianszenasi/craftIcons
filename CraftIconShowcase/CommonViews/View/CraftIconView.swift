@@ -15,9 +15,10 @@ class CraftIconView: UIView {
     private let titleLabel = CraftDynamicFontLabel()
     private let coloredView = CraftColoredView(gradientColors: [.systemRed, .systemBlue], direction: .topLeftToBottomRight)
     
-    init(text: String, config: CraftIconViewConfig = CraftIconViewConfig()) {
+    init(text: String = "", config: CraftIconViewConfig = CraftIconViewConfig()) {
         super.init(frame: .zero)
         self.config = config
+        backgroundColor = .secondarySystemBackground
         configureView()
         configureColoredView()
         configureTitleLabel(text: text)

@@ -14,6 +14,7 @@ class CraftIconView: UIView {
     
     private let titleLabel = CraftDynamicFontLabel()
     private let coloredView = CraftColoredView(gradientColors: [.systemRed, .systemBlue], direction: .topLeftToBottomRight)
+    private let imageView = UIImageView()
     
     init(text: String = "", config: CraftIconViewConfig = CraftIconViewConfig()) {
         super.init(frame: .zero)
@@ -21,6 +22,7 @@ class CraftIconView: UIView {
         backgroundColor = .secondarySystemBackground
         configureView()
         configureColoredView()
+        configureImageView()
         configureTitleLabel(text: text)
         updateStyle(with: config)
     }
@@ -50,8 +52,13 @@ class CraftIconView: UIView {
         titleLabel.isHidden = config.titleIsHidden
 
         if let colorConfig = config.colorConfig {
-            coloredView.update(with: colorConfig)
-            coloredView.isHidden = false
+            if colorConfig.type == .image {
+                imageView.isHidden = false
+                imageView.image = colorConfig.image
+            } else {
+                coloredView.update(with: colorConfig)
+                coloredView.isHidden = false
+            }
         } else {
             print("no config")
         }
@@ -65,6 +72,7 @@ class CraftIconView: UIView {
     
     private func reset() {
         coloredView.isHidden = true
+        imageView.isHidden = true
     }
         
     private func configureView() {
@@ -83,6 +91,20 @@ class CraftIconView: UIView {
             coloredView.leadingAnchor.constraint(equalTo: leadingAnchor),
             coloredView.trailingAnchor.constraint(equalTo: trailingAnchor),
             coloredView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+    
+    private func configureImageView() {
+        addSubview(imageView)
+        imageView.isHidden = true
+        imageView.contentMode = .scaleToFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     

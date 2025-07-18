@@ -15,6 +15,7 @@ class IconConfigSettingsSection: UIViewController {
     private var fontSection = UIView()
     private var solidColorSection = UIView()
     private var gradientColorSection = UIView()
+    private var imageSection = UIView()
     
     
     private var solidColorIconSettingVC: IconSettingViewController!
@@ -22,6 +23,10 @@ class IconConfigSettingsSection: UIViewController {
     
     private var gradientColorSettingVC: IconSettingViewController!
     private var gradientColorSetting: GradientColorSetting!
+    
+    
+    private var imageSettingVC: IconSettingViewController!
+    private var imageSetting: ImageSettings!
     
     
     init(iconConfig: CraftIconViewConfig, updateIconStyleCallback: @escaping (CraftIconViewConfig) -> Void) {
@@ -40,6 +45,7 @@ class IconConfigSettingsSection: UIViewController {
         configureFontSetting()
         configureSolidColorSetting()
         configureGradientColorSetting()
+        configureImageSetting()
     }
     
     private func configureFontSetting() {
@@ -126,6 +132,43 @@ class IconConfigSettingsSection: UIViewController {
         )
     }
     
+    private func configureImageSetting() {
+        view.addSubview(imageSection)
+        imageSection.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            imageSection.topAnchor.constraint(equalTo: gradientColorSection.bottomAnchor, constant: UIHelpers.padding),
+            imageSection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageSection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+        UIHelpers.addSeparator(below: imageSection, in: view, horizontalPadding: 0)
+        
+        imageSetting = ImageSettings(text: "Image")
+        imageSetting.onImageButtonTapped = { [weak self] in
+            guard let self = self else { return }
+
+            let picker = UIImagePickerController()
+            picker.sourceType = .photoLibrary
+            picker.delegate = self
+            picker.allowsEditing = false
+
+            self.present(picker, animated: true)
+        }
+        
+        imageSettingVC = IconSettingViewController(
+            title: IconConfigurationStrings.imageSettingTitle.rawValue,
+            isOn: iconConfig.colorConfig?.type == .image,
+            child: imageSetting,
+            onToggle: getOnToggleLogic(for: .image)
+        )
+        
+        UIHelpers.add(
+            childViewController: imageSettingVC,
+            to: imageSection,
+            in: self
+        )
+    }
+    
     private func getOnToggleLogic(for colorType: CraftColorType) -> ((Bool) -> Void) {
         return { [weak self] isOn in
             guard let self = self else { return }
@@ -135,8 +178,13 @@ class IconConfigSettingsSection: UIViewController {
                 switch colorType {
                 case .solid:
                     self.gradientColorSettingVC.turnOffIfNeeded()
+                    self.imageSettingVC.turnOffIfNeeded()
                 case .gradient:
                     self.solidColorIconSettingVC.turnOffIfNeeded()
+                    self.imageSettingVC.turnOffIfNeeded()
+                case .image:
+                    self.solidColorIconSettingVC.turnOffIfNeeded()
+                    self.gradientColorSettingVC.turnOffIfNeeded()
                 default:
                     break
                 }
@@ -195,5 +243,20 @@ extension IconConfigSettingsSection: UIColorPickerViewControllerDelegate {
     
     func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
         self.colorPickerViewControllerDidFinish(viewController)
+    }
+}
+
+extension IconConfigSettingsSection: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true)
+
+        if let selectedImage = info[.originalImage] as? UIImage {
+            iconConfig.colorConfig?.image = selectedImage
+            updateIconStyleCallback(iconConfig)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+          picker.dismiss(animated: true)
     }
 }

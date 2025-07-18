@@ -13,5 +13,7 @@ enum IconConfigurationStrings: String {
     case gradientColorSettingTitle = "Use Gradient Color As Background"
     case gradientFistColorPickerTitle = "Select First Gradient Color"
     case gradientSecondColorPickerTitle = "Select Second Gradient Color"
-
+    
+    case imageSettingTitle = "Use Image As Background"
+    case imagePickerTitle = "Select Background Image"
 }

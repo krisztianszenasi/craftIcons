@@ -64,12 +64,10 @@ class IconConfigurationScreen: UIViewController {
     }
     
     private func configureSettingsSection() {
-        // 1. Create content view inside scroll view
         let scrollContentView = UIView()
         scrollContentView.translatesAutoresizingMaskIntoConstraints = false
         bodySection.addSubview(scrollContentView)
 
-        // 2. Pin content view to scroll view
         NSLayoutConstraint.activate([
             scrollContentView.topAnchor.constraint(equalTo: bodySection.topAnchor),
             scrollContentView.leadingAnchor.constraint(equalTo: bodySection.leadingAnchor),
@@ -78,7 +76,6 @@ class IconConfigurationScreen: UIViewController {
             scrollContentView.widthAnchor.constraint(equalTo: bodySection.widthAnchor) // important for vertical scrolling
         ])
 
-        // 3. Create and embed child view controller
         let iconSettingsVC = IconConfigSettingsSection(iconConfig: spaceIcon.getConfig()) { [weak self] config in
             self?.spaceIcon.updateStyle(with: config)
         }
@@ -93,8 +90,7 @@ class IconConfigurationScreen: UIViewController {
             iconSettingsVC.view.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -4),
             iconSettingsVC.view.bottomAnchor.constraint(equalTo: scrollContentView.bottomAnchor),
             
-            // 💡 This line ensures the scroll view has a defined content height
-            iconSettingsVC.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 500) // try an appropriate value here
+            iconSettingsVC.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 500)
         ])
 
         iconSettingsVC.didMove(toParent: self)

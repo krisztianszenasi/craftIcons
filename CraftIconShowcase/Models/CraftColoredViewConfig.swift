@@ -11,6 +11,7 @@ enum CraftColorType {
     case none
     case solid
     case gradient
+    case image
 }
 
 struct CraftColoredViewConfig {
@@ -19,6 +20,7 @@ struct CraftColoredViewConfig {
     var solidColor: UIColor? = nil
     var gradientColors: [UIColor]? = nil
     var colorDirection: CraftColorDirection? = nil
+    var image: UIImage? = nil
     
     init() {
         self.type = .gradient
@@ -36,5 +38,10 @@ struct CraftColoredViewConfig {
         self.type = .gradient
         self.gradientColors = gradientColors
         self.colorDirection = colorDirection
+    }
+    
+    init(image: UIImage) {
+        self.type = .image
+        self.image = image
     }
 }

@@ -38,10 +38,11 @@ class IconSettingViewController: UIViewController {
         updateVisibility(animated: false)
     }
     
-    func toggle(animated: Bool = true) {
-        let newValue = !toggleSwitch.isOn
-        toggleSwitch.setOn(newValue, animated: animated)
-        toggleChanged()
+    func turnOffIfNeeded(animated: Bool = true) {
+        if(toggleSwitch.isOn) {
+            toggleSwitch.setOn(false, animated: animated)
+            updateVisibility(animated: true)
+        }
     }
 
     private func configureUI() {

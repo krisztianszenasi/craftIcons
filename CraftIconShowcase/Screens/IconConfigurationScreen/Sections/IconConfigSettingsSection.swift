@@ -16,7 +16,11 @@ class IconConfigSettingsSection: UIViewController {
     private var solidColorSection = UIView()
     private var gradientColorSection = UIView()
     
+    
+    private var solidColorIconSettingVC: IconSettingViewController!
     private var solidColorSetting: ColorSetting!
+    
+    private var gradientColorSettingVC: IconSettingViewController!
     private var gradientColorSetting: GradientColorSetting!
     
     
@@ -75,23 +79,16 @@ class IconConfigSettingsSection: UIViewController {
         UIHelpers.addSeparator(below: solidColorSection, in: view, horizontalPadding: 0)
         
         solidColorSetting = ColorSetting(text: "Selected Color", color: iconConfig.colorConfig?.solidColor ?? .systemPink)
-        solidColorSetting.onColorTap = {
-            let colorPickerVC = UIColorPickerViewController()
-            colorPickerVC.title = "Select Solid Background"
-            colorPickerVC.delegate = self
-            self.present(colorPickerVC, animated: true)
-        }
+        solidColorSetting.onColorTap = getOnColorTapLogic(for: IconConfigurationStrings.solidColorPickerTitle.rawValue)
+        solidColorIconSettingVC = IconSettingViewController(
+            title: IconConfigurationStrings.solidColorSettingTitle.rawValue,
+            isOn: iconConfig.colorConfig?.type == .solid,
+            child: solidColorSetting,
+            onToggle: getOnToggleLogic(for: .solid)
+        )
         
         UIHelpers.add(
-            childViewController: IconSettingViewController(
-                title: "Use Solid Color As Background",
-                isOn: iconConfig.colorConfig?.type == .solid,
-                child: solidColorSetting,
-                onToggle: { isOn in
-                    self.iconConfig.colorConfig?.type = isOn ? .solid : .gradient
-                    self.updateIconStyleCallback(self.iconConfig)
-                }
-            ),
+            childViewController: solidColorIconSettingVC,
             to: solidColorSection,
             in: self
         )
@@ -113,35 +110,52 @@ class IconConfigSettingsSection: UIViewController {
             secondColor: iconConfig.colorConfig?.gradientColors?[1] ?? .systemBlue
         )
         
-        gradientColorSetting.onFirstColorTap = {
-            print("first")
-            let colorPickerVC = UIColorPickerViewController()
-            colorPickerVC.title = "Select First Gradient Color"
-            colorPickerVC.delegate = self
-            self.present(colorPickerVC, animated: true)
-        }
-        
-        gradientColorSetting.onSecondColorTap = {
-            print("second")
-            let colorPickerVC = UIColorPickerViewController()
-            colorPickerVC.title = "Select Second Gradient Color"
-            colorPickerVC.delegate = self
-            self.present(colorPickerVC, animated: true)
-        }
+        gradientColorSetting.onFirstColorTap = getOnColorTapLogic(for: IconConfigurationStrings.gradientFistColorPickerTitle.rawValue)
+        gradientColorSetting.onSecondColorTap = getOnColorTapLogic(for: IconConfigurationStrings.gradientSecondColorPickerTitle.rawValue)
+        gradientColorSettingVC = IconSettingViewController(
+            title: IconConfigurationStrings.gradientColorSettingTitle.rawValue,
+            isOn: iconConfig.colorConfig?.type == .gradient,
+            child: gradientColorSetting,
+            onToggle: getOnToggleLogic(for: .gradient)
+        )
         
         UIHelpers.add(
-            childViewController: IconSettingViewController(
-                title: "Use Gradient Color As Background",
-                isOn: iconConfig.colorConfig?.type == .gradient,
-                child: gradientColorSetting,
-                onToggle: { isOn in
-                    self.iconConfig.colorConfig?.type = isOn ? .gradient : .solid
-                    self.updateIconStyleCallback(self.iconConfig)
-                }
-            ),
+            childViewController: gradientColorSettingVC,
             to: gradientColorSection,
             in: self
         )
+    }
+    
+    private func getOnToggleLogic(for colorType: CraftColorType) -> ((Bool) -> Void) {
+        return { [weak self] isOn in
+            guard let self = self else { return }
+            
+            if isOn {
+                iconConfig.colorConfig?.type = colorType
+                switch colorType {
+                case .solid:
+                    self.gradientColorSettingVC.turnOffIfNeeded()
+                case .gradient:
+                    self.solidColorIconSettingVC.turnOffIfNeeded()
+                default:
+                    break
+                }
+                
+            } else {
+                iconConfig.colorConfig?.type = .none
+            }
+            
+            self.updateIconStyleCallback(self.iconConfig)
+        }
+    }
+    
+    private func getOnColorTapLogic(for colorPickerTitle: String) -> (() -> Void){
+        return {
+            let colorPickerVC = UIColorPickerViewController()
+            colorPickerVC.title = colorPickerTitle
+            colorPickerVC.delegate = self
+            self.present(colorPickerVC, animated: true)
+        }
     }
 }
 
@@ -149,13 +163,13 @@ class IconConfigSettingsSection: UIViewController {
 extension IconConfigSettingsSection: UIColorPickerViewControllerDelegate {
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         switch(viewController.title) {
-        case "Select Solid Background":
+        case IconConfigurationStrings.solidColorPickerTitle.rawValue:
             iconConfig.colorConfig?.solidColor = viewController.selectedColor
             solidColorSetting.update(color: viewController.selectedColor)
-        case "Select First Gradient Color":
+        case IconConfigurationStrings.gradientFistColorPickerTitle.rawValue:
             iconConfig.colorConfig?.gradientColors?[0] = viewController.selectedColor
             gradientColorSetting.updateFirstColor(color: viewController.selectedColor)
-        case "Select Second Gradient Color":
+        case IconConfigurationStrings.gradientSecondColorPickerTitle.rawValue:
             iconConfig.colorConfig?.gradientColors?[1] = viewController.selectedColor
             gradientColorSetting.updateSecondColor(color: viewController.selectedColor)
         default:

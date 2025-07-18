@@ -8,11 +8,9 @@
 import UIKit
 
 class IconFontSettings: UIView {
-    
+
     private let titleLabel = CraftBodyLabel(textAlignment: .left)
-    private let fontPicker = UIPickerView()
-    
-    private let stackView = UIStackView()
+    private let fontSelectorButton = UIButton(type: .system)
 
     private let availableFonts = [
         "AvenirNext-Bold",
@@ -22,9 +20,9 @@ class IconFontSettings: UIView {
         "Georgia-Bold",
         "Futura-Medium"
     ]
-    
+
     var onFontSelected: ((String) -> Void)?
-    
+
     init() {
         super.init(frame: .zero)
         configure()
@@ -36,47 +34,57 @@ class IconFontSettings: UIView {
 
     private func configure() {
         translatesAutoresizingMaskIntoConstraints = false
-        
+
         titleLabel.text = "Font family"
-        fontPicker.dataSource = self
-        fontPicker.delegate = self
-
-        stackView.axis = .vertical
-        stackView.spacing = 8
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-
-        addSubview(stackView)
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(fontPicker)
+        titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
+        fontSelectorButton.setTitle("Select Font", for: .normal)
+        fontSelectorButton.contentHorizontalAlignment = .right
+        fontSelectorButton.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        fontSelectorButton.addTarget(self, action: #selector(showFontPicker), for: .touchUpInside)
+
+        let stack = UIStackView(arrangedSubviews: [titleLabel, fontSelectorButton])
+        stack.axis = .horizontal
+        stack.spacing = 8
+        stack.alignment = .center
+        stack.distribution = .equalSpacing
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(stack)
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            titleLabel.heightAnchor.constraint(equalToConstant: 24)
+            stack.topAnchor.constraint(equalTo: topAnchor),
+            stack.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stack.bottomAnchor.constraint(equalTo: bottomAnchor),
+            heightAnchor.constraint(equalToConstant: 44)
         ])
     }
-}
 
-extension IconFontSettings: UIPickerViewDataSource, UIPickerViewDelegate {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
+    @objc private func showFontPicker() {
+        guard let parentVC = findViewController() else { return }
+
+        let alert = UIAlertController(title: "Select Font", message: nil, preferredStyle: .actionSheet)
+
+        for font in availableFonts {
+            alert.addAction(UIAlertAction(title: font, style: .default, handler: { _ in
+                self.fontSelectorButton.setTitle(font, for: .normal)
+                self.onFontSelected?(font)
+            }))
+        }
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        parentVC.present(alert, animated: true)
     }
 
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return availableFonts.count
-    }
-
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return availableFonts[row]
-    }
-
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedFont = availableFonts[row]
-        onFontSelected?(selectedFont)
+    // Helper to get the parent view controller
+    private func findViewController() -> UIViewController? {
+        var responder: UIResponder? = self
+        while let next = responder?.next {
+            if let vc = next as? UIViewController {
+                return vc
+            }
+            responder = next
+        }
+        return nil
     }
 }

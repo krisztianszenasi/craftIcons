@@ -1,6 +1,6 @@
 # CraftIcons
 
-![carftIcons.png](assets/carftIcons.png)
+![carftIcons.png](assets/craftIcons.png)
 
 ---
 

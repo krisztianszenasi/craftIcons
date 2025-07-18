@@ -9,7 +9,7 @@ import UIKit
 
 class SpaceSettingsScreen: UIViewController {
     
-    private var spaceName: String = "Team Acqusition"
+    private var spaceName: String = "Talent Acquisition"
     
     private let titleLabel = CraftTitleLabel(textAlignment: .left, fontSize: 34)
     private let headerSection = UIView()

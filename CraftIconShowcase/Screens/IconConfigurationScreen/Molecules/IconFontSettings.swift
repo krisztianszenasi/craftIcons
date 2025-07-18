@@ -76,7 +76,6 @@ class IconFontSettings: UIView {
         parentVC.present(alert, animated: true)
     }
 
-    // Helper to get the parent view controller
     private func findViewController() -> UIViewController? {
         var responder: UIResponder? = self
         while let next = responder?.next {

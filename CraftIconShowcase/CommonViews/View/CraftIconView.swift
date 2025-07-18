@@ -97,7 +97,7 @@ class CraftIconView: UIView {
     private func configureImageView() {
         addSubview(imageView)
         imageView.isHidden = true
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([

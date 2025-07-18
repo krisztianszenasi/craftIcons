@@ -149,13 +149,28 @@ class IconConfigSettingsSection: UIViewController {
         }
     }
     
-    private func getOnColorTapLogic(for colorPickerTitle: String) -> (() -> Void){
-        return {
+    private func getOnColorTapLogic(for colorPickerTitle: String) -> (() -> Void) {
+        return { [weak self] in
+            guard let self = self else { return }
+
             let colorPickerVC = UIColorPickerViewController()
             colorPickerVC.title = colorPickerTitle
             colorPickerVC.delegate = self
-            self.present(colorPickerVC, animated: true)
+
+            let navController = UINavigationController(rootViewController: colorPickerVC)
+            navController.view.backgroundColor = .systemBackground
+            colorPickerVC.navigationItem.rightBarButtonItem = UIBarButtonItem(
+                barButtonSystemItem: .done,
+                target: self,
+                action: #selector(self.dismissColorPicker)
+            )
+
+            self.present(navController, animated: true)
         }
+    }
+    
+    @objc private func dismissColorPicker() {
+        dismiss(animated: true)
     }
 }
 

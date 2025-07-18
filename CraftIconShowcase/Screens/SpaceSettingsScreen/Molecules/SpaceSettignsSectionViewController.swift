@@ -29,7 +29,7 @@ class SpaceSettignsSectionViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.translatesAutoresizingMaskIntoConstraints = false
         self.configureSpaceNameSetting()
-        self.configureCollaboratorsSetting()
+//        self.configureCollaboratorsSetting()
     }
 
     required init?(coder: NSCoder) {

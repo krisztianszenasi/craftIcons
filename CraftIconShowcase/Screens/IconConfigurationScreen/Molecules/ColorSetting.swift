@@ -47,6 +47,8 @@ class ColorSetting: UIView {
         solidColorView.layer.cornerRadius = 3
         
         NSLayoutConstraint.activate([
+            heightAnchor.constraint(equalToConstant: 35),
+            
             titleLabel.topAnchor.constraint(equalTo: topAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -54,7 +56,7 @@ class ColorSetting: UIView {
             solidColorView.trailingAnchor.constraint(equalTo: trailingAnchor),
             solidColorView.topAnchor.constraint(equalTo: topAnchor),
             solidColorView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            solidColorView.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: UIHelpers.padding)
+            solidColorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2)
         ])
     }
 }

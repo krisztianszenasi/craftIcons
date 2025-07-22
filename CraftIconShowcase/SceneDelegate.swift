@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         window?.rootViewController = SpaceSettingsScreen()
         window?.makeKeyAndVisible()
+        UINavigationBar.appearance().tintColor = .systemLightBlue
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -20,7 +20,7 @@ class IconConfigurationScreen: UIViewController {
     private var fontSettingSection = UIView()
     private var solidColorSection = UIView()
     private var gradientColorSection = UIView()
-    private var applyChangesButton = CraftButton(backgroundColor: .systemBlue, title: "Apply changes")
+    private var applyChangesButton = CraftButton(title: "Apply changes")
     
     
     private var fontSetting: IconSettingViewController!

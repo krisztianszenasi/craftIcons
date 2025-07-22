@@ -10,7 +10,7 @@ import UIKit
 class IconSettingViewController: UIViewController {
 
     private let titleLabel = UILabel()
-    private let toggleSwitch = UISwitch()
+    private let toggleSwitch = CraftSwitch()
     private let contentContainer = UIView()
     private let stackView = UIStackView()
     private var onToggle: ((Bool) -> Void)?
